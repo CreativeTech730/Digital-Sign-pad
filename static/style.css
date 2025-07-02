@@ -1,0 +1,47 @@
+.signature-container {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 300px;
+}
+
+#signature-pad {
+  width: 100%;
+  height: 100%;
+}
+
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.action-icons i {
+  cursor: pointer;
+  margin: 0 0.25rem;
+  font-size: 1.2rem;
+}
+
+#pen-preview {
+  display: inline-block;
+  border: 1px solid #ccc;
+}
+
+#signatures {
+  max-height: 70vh;    /* up to half the viewport height */
+  overflow-y: auto;
+  padding-right: 4px;         /* space for scrollbar */
+}
+
+/* Optional: style scrollbar to look cleaner */
+#signatures::-webkit-scrollbar {
+  width: 6px;
+}
+#signatures::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+#signatures::-webkit-scrollbar-track {
+  background: transparent;
+}
