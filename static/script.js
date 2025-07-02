@@ -46,7 +46,7 @@ function savePad() {
 
   const name = document.getElementById('name').value.trim();
   if (!name) {
-    alert("Please enter a name.");
+    showWarning("Please enter a name.");
     return;
   }
 
@@ -60,7 +60,7 @@ function savePad() {
     })
     .then(res => res.json())
     .then(data => {
-      alert(data.message);
+      showSuccess(data.message);
       signaturePad.clear();
       document.getElementById('name').value = '';
       loadSignatures();
@@ -70,7 +70,7 @@ function savePad() {
 
 function getCroppedSignatureDataURL() {
   if (signaturePad.isEmpty()) {
-    alert("Please draw something first!");
+    showWarning("Please draw something first!");
     return null;
   }
 
@@ -109,7 +109,7 @@ function getCroppedSignatureDataURL() {
 
 function downloadCroppedPad() {
   if (signaturePad.isEmpty()) {
-    alert("Nothing to download. Please draw your signature first!");
+    showWarning("Nothing to download. Please draw your signature first!");
     return;
   }
 
@@ -244,12 +244,12 @@ function editSignature(id) {
 
 function updateSignature(id) {
   if (signaturePad.isEmpty()) {
-    alert("Signature pad is empty!");
+    showWarning("Signature pad is empty!");
     return;
   }
   const name = document.getElementById('name').value.trim();
   if (!name) {
-    alert("Please enter name.");
+    showWarning("Please enter name.");
     return;
   }
   const dataURL = getCroppedSignatureDataURL()
@@ -260,7 +260,7 @@ function updateSignature(id) {
   })
   .then(res => res.json())
   .then(data => {
-    alert(data.message);
+    showSuccess(data.message);
     editingId = null;
     signaturePad.clear();
     document.getElementById('name').value = '';
@@ -269,13 +269,24 @@ function updateSignature(id) {
 }
 
 function deleteSignature(id) {
-  if (!confirm("Are you sure you want to delete this signature?")) return;
-  fetch(`/delete-signature/${id}`, { method: 'DELETE' })
-    .then(res => res.json())
-    .then(data => {
-      alert(data.message);
-      loadSignatures();
-    });
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you want to delete this signature?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`/delete-signature/${id}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(data => {
+          showSuccess(data.message);
+          loadSignatures();
+        });
+    }
+  });
 }
 
 function updatePenPreview() {
@@ -294,3 +305,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.toggle('dark-mode', toggle.checked);
   });
 });
+
+function showSuccess(msg) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: msg,
+    confirmButtonColor: '#0d6efd'
+  });
+}
+
+function showError(msg) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: msg,
+    confirmButtonColor: '#dc3545'
+  });
+}
+
+function showWarning(msg) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Warning',
+    text: msg,
+    confirmButtonColor: '#ffc107'
+  });
+}
